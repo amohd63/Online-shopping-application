@@ -39,9 +39,23 @@ public class ProductService {
         return productRepository.findProductByNameAndCategory(productName, Category.valueOf(productCategory));
     }
 
-    public Product updateProduct(Product product) {
-        Product product1 = productRepository.findProductByName(product.getName());
-        return productRepository.save(product);
+    public Product updateProduct(Product productObj) {
+        Product product = productRepository.findProductByName(productObj.getName());
+        if (product == null) {
+            return null;
+        }
+        try{
+            Category.valueOf(productObj.getCategory());
+        }catch (IllegalArgumentException e){
+            return null;
+        }
+        if (productObj.getPrice().compareTo(new BigDecimal(0)) <= 0 || productObj.getPrice().compareTo(new BigDecimal(100000)) > 0) {
+            return null;
+        }
+        productObj.setId(product.getId());
+        productObj.setCreationTime(product.getCreationTime());
+        productObj.setLastUpdateTime(0);
+        return productRepository.save(productObj);
     }
 
     public String deleteProduct(String productName) {

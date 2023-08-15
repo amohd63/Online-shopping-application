@@ -8,31 +8,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/V1.0/product")
 public class ProductController {
     @Autowired
     ProductService service;
 
-    @DeleteMapping("/api/V1.0/product")
-    public String deleteProduct(@RequestParam("name") String productName) {
-        return service.deleteProduct(productName);
-    }
-
-    @GetMapping("/api/V1.0/product")
-    public Product getProduct(@RequestParam("name") String productName, @RequestParam("category") String productCategory) {
-        return service.getProduct(productName, productCategory);
-    }
-    
-    @PostMapping("/api/V1.0/product")
-    public String createProduct(@RequestBody Product product) {
-        return service.createProduct(product);
-    }
-
-    @GetMapping("/api/V1.0/product1")
+    @GetMapping
     public List<Product> getAllProducts() {
         return service.getAllProducts();
     }
 
-    @PutMapping("/api/V1.0/product")
+    @DeleteMapping(params = "name")
+    public String deleteProduct(@RequestParam String name) {
+        return service.deleteProduct(name);
+    }
+
+    @GetMapping(params = {"name", "category"})
+    public Product getProduct(@RequestParam(value = "name", required = true) String productName, @RequestParam(value = "category", required = true) String productCategory) {
+        return service.getProduct(productName, productCategory);
+    }
+
+    @PostMapping
+    public String createProduct(@RequestBody Product product) {
+        return service.createProduct(product);
+    }
+
+    @PutMapping
     public Product updateProduct(@RequestBody Product product) {
         return service.updateProduct(product);
     }

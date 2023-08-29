@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
@@ -22,8 +28,11 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeOrder(@RequestBody OrderRequest product) {
-        return service.placeOrder(product);
+    @CircuitBreaker(name = "placeOrder", fallbackMethod = "fallbackMethod")
+    @TimeLimiter(name = "placeOrder")
+    @Retry(name = "placeOrder")
+    public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) {
+        return CompletableFuture.supplyAsync(() -> service.placeOrder(orderRequest));
     }
 
     @GetMapping(params = "orderNumber")
@@ -36,5 +45,9 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public String deleteOrder(@RequestParam String orderNumber) {
         return service.deleteProduct(orderNumber);
+    }
+
+    public CompletableFuture<String> fallbackMethod(RuntimeException runtimeException) {
+        return CompletableFuture.supplyAsync(() -> "Oops! Something went wrong, please try again later!");
     }
 }

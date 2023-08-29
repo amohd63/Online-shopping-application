@@ -19,11 +19,12 @@ public class InventoryService {
     @Autowired
     private InventoryRepository inventoryRepository;
     @Autowired
-    private WebClient webClient;
+    private WebClient.Builder webClientBuilder;
 
     public Boolean placeProduct(InventoryRequest inventoryRequest) {
-        ProductResponse productResponse = webClient.get()
-                .uri("http://localhost:8080/api/product",
+        ProductResponse productResponse = webClientBuilder.build()
+                .get()
+                .uri("http://product-service/api/product",
                         uriBuilder -> uriBuilder.queryParam("skuCode", inventoryRequest.getSkuCode()).build())
                 .retrieve()
                 .bodyToMono(ProductResponse.class)

@@ -16,14 +16,15 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public String createProduct(ProductRequest productResponse) {
-        if (productRepository.findProductByName(productResponse.getName()) != null) {
-            return "Product [" + productResponse.getName() + "], is in the system!";
+    public String createProduct(ProductRequest productRequest) {
+        if (productRepository.findProductByName(productRequest.getName()) != null) {
+            return "Product [" + productRequest.getName() + "], is in the system!";
         }
         Product product = Product.builder()
-                .name(productResponse.getName())
-                .description(productResponse.getDescription())
-                .price(productResponse.getPrice())
+                .skuCode(productRequest.getSkuCode())
+                .name(productRequest.getName())
+                .description(productRequest.getDescription())
+                .price(productRequest.getPrice())
                 .build();
         productRepository.save(product);
         return "Product added successfully";
@@ -39,6 +40,10 @@ public class ProductService {
         return mapToProductResponse(product);
     }
 
+    public ProductResponse getProductBySkuCode(String skuCode) {
+        Product product = productRepository.findProductBySkuCode(skuCode);
+        return mapToProductResponse(product);
+    }
     public ProductResponse updateProduct(ProductRequest productRequest) {
         Product product = productRepository.findProductByName(productRequest.getName());
         if (product == null) {
@@ -47,6 +52,7 @@ public class ProductService {
         product.setDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice());
         product.setName(productRequest.getName());
+        product.setSkuCode(productRequest.getSkuCode());
         productRepository.save(product);
         return mapToProductResponse(product);
     }
@@ -59,6 +65,7 @@ public class ProductService {
     private ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
+                .skuCode(product.getSkuCode())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())

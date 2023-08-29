@@ -15,21 +15,27 @@ public class InventoryController {
     @Autowired
     InventoryService service;
 
-    @GetMapping
-    public List<InventoryResponse> getAllInventories() {
-        return service.getALlInventories();
-    }
+//    @GetMapping
+//    public List<InventoryResponse> getAllInventories() {
+//        return service.getALlInventories();
+//    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeProduct(@RequestBody InventoryRequest inventoryRequest) {
+    public Boolean placeProduct(@RequestBody InventoryRequest inventoryRequest) {
         return service.placeProduct(inventoryRequest);
     }
 
-    @GetMapping(params = "skuCode")
-    @ResponseStatus(HttpStatus.FOUND)
-    public InventoryResponse getProductFromInventory(@RequestParam(value = "skuCode", required = true) String skuCode) {
-        return service.getProductFromInventory(skuCode);
+//    @GetMapping(params = "skuCode")
+//    @ResponseStatus(HttpStatus.FOUND)
+//    public InventoryResponse getProductFromInventory(@RequestParam(value = "skuCode", required = true) String skuCode) {
+//        return service.getProductFromInventory(skuCode);
+//    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<InventoryResponse> isInStock(@RequestParam List<String> skuCode) {
+        return service.isInStock(skuCode);
     }
 
     @DeleteMapping(params = "skuCode")

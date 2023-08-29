@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class InventoryResponse {
     private String skuCode;
-    private Integer quantity;
+    private boolean isInStock;
 }

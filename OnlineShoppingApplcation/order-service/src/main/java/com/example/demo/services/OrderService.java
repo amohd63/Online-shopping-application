@@ -1,19 +1,20 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.InventoryResponse;
 import com.example.demo.dto.OrderLineItemsDto;
 import com.example.demo.dto.OrderRequest;
 import com.example.demo.dto.OrderResponse;
 import com.example.demo.models.Order;
 import com.example.demo.models.OrderLineItems;
 import com.example.demo.repositories.OrderRepository;
-import java.util.UUID;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,18 +23,39 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private WebClient.Builder webClientBuilder;
+    private WebClient webClient;
+
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
+
         List<OrderLineItems> orderLineItems = orderRequest.getOrderLineItemsListDto()
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
 
         order.setOrderLineItemsList(orderLineItems);
-        orderRepository.save(order);
-        return "Order placed successfully";
+
+        List<String> skuCodes = orderRequest.getOrderLineItemsListDto().stream()
+                .map(OrderLineItemsDto::getSkuCode)
+                .toList();
+
+        InventoryResponse[] inventoryResponseArray = webClient.get()
+                .uri("http://localhost:8082/api/inventory",
+                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
+                .retrieve()
+                .bodyToMono(InventoryResponse[].class)
+                .block();
+
+        boolean allProductsInStock = Arrays.stream(inventoryResponseArray)
+                .allMatch(InventoryResponse::isInStock);
+
+        if (allProductsInStock) {
+            orderRepository.save(order);
+            return "Order placed successfully";
+        } else {
+            throw new IllegalArgumentException("Some ordered products are not in the stock");
+        }
     }
 
     public List<OrderResponse> getAllOrders() {

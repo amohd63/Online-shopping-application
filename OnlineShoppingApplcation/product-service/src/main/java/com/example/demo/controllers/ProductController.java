@@ -33,6 +33,12 @@ public class ProductController {
         return service.getProduct(productName);
     }
 
+    @GetMapping(params = "skuCode")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ProductResponse getProductBySkuCode(@RequestParam(value = "skuCode", required = true) String skuCode) {
+        return service.getProductBySkuCode(skuCode);
+    }
+
     @DeleteMapping(params = "name")
     @ResponseStatus(HttpStatus.OK)
     public String deleteProduct(@RequestParam String name) {

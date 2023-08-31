@@ -3,7 +3,7 @@ package com.example.demo.models;
 import lombok.*;
 
 import java.math.BigDecimal;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "order_line_items")

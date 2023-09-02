@@ -6,10 +6,12 @@ import com.example.demo.dto.InventoryResponse;
 import com.example.demo.dto.OrderLineItemsDto;
 import com.example.demo.dto.OrderRequest;
 import com.example.demo.dto.OrderResponse;
+import com.example.demo.event.OrderPlacedEvent;
 import com.example.demo.models.Order;
 import com.example.demo.models.OrderLineItems;
 import com.example.demo.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,6 +30,8 @@ public class OrderService {
     private WebClient.Builder webClientBuilder;
     @Autowired
     private Tracer tracer;
+    @Autowired
+    private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -63,6 +67,7 @@ public class OrderService {
 
             if (allProductsInStock) {
                 orderRepository.save(order);
+                kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
                 return "Order placed successfully";
             } else {
                 throw new IllegalArgumentException("Some ordered products are not in the stock");

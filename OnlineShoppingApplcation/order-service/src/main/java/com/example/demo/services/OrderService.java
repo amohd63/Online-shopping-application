@@ -10,6 +10,7 @@ import com.example.demo.event.OrderPlacedEvent;
 import com.example.demo.models.Order;
 import com.example.demo.models.OrderLineItems;
 import com.example.demo.repositories.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -23,15 +24,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OrderService {
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private WebClient.Builder webClientBuilder;
-    @Autowired
-    private Tracer tracer;
-    @Autowired
-    private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+    private final OrderRepository orderRepository;
+    private final WebClient.Builder webClientBuilder;
+    private final Tracer tracer;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();

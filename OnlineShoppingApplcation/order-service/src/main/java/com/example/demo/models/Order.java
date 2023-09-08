@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Order_Table")
+@Table(name = "order_table")
 @Getter
 @Setter
 @NoArgsConstructor

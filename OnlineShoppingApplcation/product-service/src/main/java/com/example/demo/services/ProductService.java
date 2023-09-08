@@ -4,6 +4,8 @@ import com.example.demo.dto.ProductRequest;
 import com.example.demo.dto.ProductResponse;
 import com.example.demo.models.Product;
 import com.example.demo.repositories.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ProductService {
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public String createProduct(ProductRequest productRequest) {
         if (productRepository.findProductByName(productRequest.getName()) != null) {

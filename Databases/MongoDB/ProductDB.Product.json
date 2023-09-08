@@ -1,12 +1,60 @@
 [{
   "_id": {
-    "$oid": "64e0cc8189c2922900410c7e"
+    "$oid": "64edaf9f1dd04739d6f27296"
+  },
+  "name": "product6",
+  "description": "This is description of product6",
+  "price": "100000",
+  "_class": "com.example.demo.models.Product",
+  "skuCode": "SKU006"
+},
+{
+  "_id": {
+    "$oid": "64edafa51dd04739d6f27297"
+  },
+  "name": "product5",
+  "description": "This is description of product5",
+  "price": "100000",
+  "_class": "com.example.demo.models.Product",
+  "skuCode": "SKU005"
+},
+{
+  "_id": {
+    "$oid": "64edafab1dd04739d6f27298"
+  },
+  "name": "product4",
+  "description": "This is description of product4",
+  "price": "100000",
+  "_class": "com.example.demo.models.Product",
+  "skuCode": "SKU004"
+},
+{
+  "_id": {
+    "$oid": "64edafb11dd04739d6f27299"
+  },
+  "name": "product3",
+  "description": "This is description of product3",
+  "price": "100000",
+  "_class": "com.example.demo.models.Product",
+  "skuCode": "SKU003"
+},
+{
+  "_id": {
+    "$oid": "64edafb61dd04739d6f2729a"
+  },
+  "name": "product2",
+  "description": "This is description of product2",
+  "price": "100000",
+  "_class": "com.example.demo.models.Product",
+  "skuCode": "SKU002"
+},
+{
+  "_id": {
+    "$oid": "64edafbc1dd04739d6f2729b"
   },
   "name": "product1",
   "description": "This is description of product1",
-  "price": "10000",
-  "creationTime": 0,
-  "lastUpdateTime": 0,
-  "category": "OTHERS",
-  "_class": "com.example.demo.models.Product"
+  "price": "100000",
+  "_class": "com.example.demo.models.Product",
+  "skuCode": "SKU001"
 }]
